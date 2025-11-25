@@ -1,302 +1,285 @@
-🌱 AgriDrought-AI
-A County-Level Drought Index Prediction System using Remote-Sensing Vegetation Signals
+# 🌱 AgriDrought-AI
 
-Developer: Antra Tiwari (AI/ML Engineer)
-Live App: https://huggingface.co/spaces/antra04/AgriDrought-AI
+### **A County-Level Drought Index Prediction System Using Remote-Sensing Vegetation Signals**
 
-GitHub Repo: https://github.com/antra04/AgriDrought-AI
+**Developer:** *Antra Tiwari (AI/ML Engineer)*
+**Live App:** [https://huggingface.co/spaces/antra04/AgriDrought-AI](https://huggingface.co/spaces/antra04/AgriDrought-AI)
+**GitHub Repo:** [https://github.com/antra04/AgriDrought-AI](https://github.com/antra04/AgriDrought-AI)
 
-🚀 Project Overview
+---
 
-AgriDrought-AI is a geospatial intelligence system engineered to predict weekly drought severity across U.S. counties using satellite-derived vegetation indices.
+## 🚀 Project Overview
 
-The solution integrates climate-aware feature engineering, machine-learning ensemble models, and a production-grade Gradio interface deployed on Hugging Face Spaces.
+**AgriDrought-AI** is an end-to-end geospatial drought forecasting system engineered to predict **weekly agricultural drought indices** across U.S. counties using satellite-derived vegetation signals (NDVI & EVI).
 
-The platform transforms raw NDVI–EVI vegetation signals into actionable drought risk insights for precision agriculture, early-warning systems, crop planning, and climate-impact research.
+The platform combines:
 
-🎯 Why This Project Matters
+* High-resolution spatiotemporal preprocessing
+* Multi-model machine learning ensembles
+* Robust feature engineering pipelines
+* Cloud-native deployment via Hugging Face Spaces
+* Interactive Gradio-based inference UI
 
-Agricultural drought forecasting is essential for:
+It transforms raw vegetation reflectance values into **operational drought intelligence** for agriculture, climate analytics, and environmental early-warning systems.
 
-Reducing climate-risk exposure
+---
 
-Supporting water-resource planning
+## 🎯 Why This Project Matters
 
-Optimizing crop decisions
+Accurate drought prediction enables:
 
-Helping farmers, analysts & policymakers act early
+* Climate-risk mitigation
+* Agricultural decision support
+* Water-resource and irrigation planning
+* Crop yield protection
+* Early-warning systems for extreme climate patterns
+* Transparent, reproducible data-driven drought insights
 
-Providing transparent AI-driven drought intelligence
+---
 
-AgriDrought-AI brings together data, models, and deployment into an easy-to-use web tool.
+## 🛰️ Dataset Summary
 
-🛰️ Dataset Summary
-Region
+### **Spatial & Temporal Coverage**
 
-✔ United States counties (nationwide coverage)
-✔ USDA + USGS-aligned FIPS coding system
-✔ Weekly granularity
+✔ Nationwide U.S. county-level coverage
+✔ Weekly temporal granularity
+✔ USDA/USGS standardised **FIPS-based geospatial indexing**
 
-Core Data Fields Used During Training
-Feature	Description
-NDVI	Normalized Difference Vegetation Index — vegetation greenness
-EVI	Enhanced Vegetation Index — improves sensitivity in dense vegetation
-County FIPS	Unique 5-digit county geocode
-State FIPS	2-digit state identifier
-Year	Calendar year
-Week	ISO week number
-Month	Extracted from week timestamp
-Week-of-Year	Used for seasonal modelling
-sin_week & cos_week	Seasonal sinusoidal encodings
-ndvi_z, evi_z	Z-score normalized vegetation indices
-Data Source Type
+### **Core Training Features**
 
-Historical NDVI/EVI satellite vegetation index records
+| Feature                 | Description                            |
+| ----------------------- | -------------------------------------- |
+| **NDVI**                | Normalized Difference Vegetation Index |
+| **EVI**                 | Enhanced Vegetation Index              |
+| **County FIPS**         | 5-digit county geocode                 |
+| **State FIPS**          | 2-digit state geocode                  |
+| **Year / Week / Month** | Temporal encoding                      |
+| **Week-of-Year**        | Seasonal behaviour indicator           |
+| **sin_week, cos_week**  | Fourier-style seasonal transforms      |
+| **ndvi_z, evi_z**       | Standardized vegetation anomalies      |
 
-USA geospatial metadata
+### **Data Sources**
 
-Weekly environmental time-series
+* Satellite-derived vegetation reflectance datasets
+* US county boundary metadata
+* Historical environmental time-series
 
-🧪 Model Architecture
+---
 
-AgriDrought-AI uses a three-model ensemble (stacking removed for simplicity & stability):
+## 🧪 Model Architecture
 
-🌲 1. Random Forest Regressor
+AgriDrought-AI uses a **three-model ensemble** (no meta-stacker for deployment reliability):
 
-Strong baseline
+### 🌲 **1. Random Forest Regressor**
 
-Handles noisy environmental signals
+* Bagging-based tree ensemble
+* Insensitive to multicollinearity
+* Strong baseline for noisy geospatial signals
+* Robust variance control
 
-Excellent variance control
+### ⚡ **2. XGBoost (JSON Booster)**
 
-⚡ 2. XGBoost (native JSON booster)
+* High-performance gradient boosting
+* Sparse-aware tree splitting
+* Uses HF-compatible **native JSON booster** for fast loading
+* Captures subtle temporal–vegetation nonlinearities
 
-High-performance gradient-boosting system
+### 🐈 **3. CatBoost Regressor**
 
-Best for complex non-linear vegetation patterns
+* Implements **ordered boosting** (reduces target leakage)
+* Best performance on heterogeneous tabular data
+* Handles missing vegetation values gracefully
+* Top model by RMSE & R²
 
-Deployed via fast native booster
+---
 
-🐈 3. CatBoost Regressor
+## 📈 Model Performance
 
-Handles high-dimensional tabular data
+| Model             | RMSE ↓ | R² ↑  | Notes                                      |
+| ----------------- | ------ | ----- | ------------------------------------------ |
+| **CatBoost**      | ~0.88  | ~0.96 | Best generalization, stable across seasons |
+| **XGBoost**       | ~1.00  | ~0.94 | Strong nonlinear modelling                 |
+| **Random Forest** | ~1.25  | ~0.91 | Reliable fallback baseline                 |
 
-Robust to missing values
+🏆 **Best Overall:** *CatBoost*
+🧱 **Most Stable Contributor:** *Random Forest*
 
-Captures vegetation trends effectively
+---
 
-📈 Model Performance (Validation Metrics)
-Model	RMSE ↓	R² ↑	Notes
-CatBoost	~0.88	~0.96	Strongest stability & consistency
-XGBoost	~1.00	~0.94	High accuracy, best non-linear detection
-Random Forest	~1.25	~0.91	Robust fallback baseline
+## 🔍 System Workflow
 
-Best model (overall): CatBoost
-Most consistent prediction contribution: Random Forest
+### **1. User Inputs**
 
-🔍 System Workflow
-1. Input Features Provided by User
+* NDVI
+* EVI
+* County FIPS
+* State FIPS
+* Week Start Date
 
-NDVI
+### **2. Automated Feature Engineering Pipeline**
 
-EVI
+The system performs dynamic transformations:
 
-County FIPS
+* Date parsing → year, month, week
+* Seasonal Fourier encodings (sin/cos)
+* Vegetation index Z-score normalization
+* Deterministic feature ordering to match model training schema
+* Data consistency validation
 
-State FIPS
+### **3. Multi-Model Inference**
 
-Week Start Date
+* All three models run independently
+* Predictions stored with metadata
+* Ranking based on model confidence + validation performance
 
-2. Automated Feature Engineering
+### **4. Output**
 
-The system generates:
+* Final drought index
+* Full model comparison table
+* Confidence-ranked predictions
+* Visualization (Matplotlib bar chart)
+* Exportable CSV files
 
-year, week, month
+---
 
-sin/cos seasonal encodings
+## 🌐 Gradio-Based UI (HF Spaces)
 
-vegetation z-scores
+### **Single Prediction**
 
-all features in correct model-train order
+* Input panel
+* Instant drought prediction
+* Model comparison graph
+* Downloadable results
 
-3. Model Inference
+### **Batch CSV Prediction**
 
-Each model predicts its own drought index
+* Upload CSV
+* Batched inference
+* Batch-level graphs
+* Processed CSV output
 
-Predictions are ranked by confidence
+### **Reports Section**
 
-Results displayed as:
+* Loaded model metadata
+* HF Hub version details
 
-Summary text
+### **About Section**
 
-Prediction table
+* Project documentation embedded in UI
 
-Bar chart
+---
 
-Downloadable CSV
+## ☁️ Deployment Architecture
 
-4. Output
+### **1. GitHub (Source Code)**
 
-Drought index (regression score)
+* `app.py`: full Gradio interface + inference pipeline
+* `requirements.txt`: deterministic environment spec
+* `runtime.txt`: Python version pinning
+* `.gitignore`: build artifacts excluded
+* Documentation & metadata
 
-Best performing model for that specific input
+### **2. Hugging Face Hub (Model Registry)**
 
-🌐 UI Overview (Gradio Web App)
+* All models stored under:
+  **`antra04/agri-drought-ai-models`**
+* Auto-downloaded and cached on first inference
+* Versioning supported
 
-The deployed app includes:
+### **3. Hugging Face Spaces (App Hosting)**
 
-🔹 Single Prediction Page
+* Auto-build environment
+* Cached model weights
+* Session-based scalable endpoint
+* Zero-config CI/CD on push
 
-Enter NDVI, EVI, FIPS codes, date
+### **4. Pipeline Orchestration**
 
-Click “Predict”
+* Deterministic inference graph
+* On-demand model loading
+* Stateless HTTP session
+* Optimized for low-latency predictions
 
-See:
+---
 
-Summary
+## ⚠️ Limitations
 
-Full model comparison table
+1. **Restricted to U.S. geography** (FIPS-based inference only)
+2. **Vegetation anomalies** (wildfire, snow cover, flooding) may affect performance
+3. **Not a hydrological drought model** (does not analyze groundwater)
+4. **Stacked meta-learner removed** for deployment stability
+5. **Trained for in-distribution week ranges** (seasonal generalization only)
 
-Prediction visualization
+---
 
-Downloadable CSV
+## 🛠️ Technical Stack (Deep Technical Details)
 
-🔹 Batch CSV Upload
+### **Programming & Core Libraries**
 
-Upload a CSV of multiple counties
+* **Python 3.10** (stable for ML, HF Spaces)
+* **NumPy** for vectorized numerical ops
+* **Pandas** for high-throughput tabular processing
 
-Outputs predictions for all rows
+### **Machine Learning / Modelling**
 
-Generates batch-level bar graph
+* **XGBoost** (JSON booster, optimized tree traversal engine)
+* **CatBoost** (ordered boosting, symmetric trees)
+* **Scikit-Learn** (RF, preprocessing, metrics)
 
-🔹 Reports Section
+### **Geospatial & Temporal Engineering**
 
-Lists all models loaded from HF Hub
+* Custom **Fourier seasonal encoding pipeline**
+* Z-score vegetation anomaly modelling
+* Automated feature alignment across models
+* FIPS-based geospatial indexing
 
-🔹 About Section
+### **Visualization**
 
-Documentation built directly into interface
+* **Matplotlib** for deterministic, reproducible charts
 
-☁️ Deployment Architecture
-1. Code Hosted on GitHub
+### **Deployment & Cloud Infra**
 
-👉 Repo: https://github.com/antra04/AgriDrought-AI
+* **Hugging Face Spaces**
 
-Includes:
+  * Sandboxed Python environment
+  * Cached model assets
+  * Ephemeral GPU/CPU compute
+  * Stateless, scalable service
 
-app.py
+* **Hugging Face Hub (Model Hosting)**
 
-requirements.txt
+  * Versioned model artifacts
+  * JSON boosters for XGBoost
+  * CatBoost binary serialization
 
-runtime.txt
+### **Front-End / UI**
 
-.gitignore
+* **Gradio 4.44**
 
-README.md
+  * Event-driven inference
+  * CSV uploaders
+  * Custom theming
+  * Session-agnostic layout
 
-2. Models Hosted on Hugging Face Hub
+### **MLOps + DevOps**
 
-All trained models stored under:
-🔗 antra04/agri-drought-ai-models
+* GitHub-based code versioning
+* Automatic app rebuild on push
+* Model-hub integration for reproducibility
+* Fully containerized HF environment
 
-The Gradio app auto-downloads models at runtime.
+---
 
-3. Website Deployed on Hugging Face Spaces
+## 🎉 Final Delivery Summary
 
-Live app:
-🔗 https://huggingface.co/spaces/antra04/AgriDrought-AI
+AgriDrought-AI provides:
 
-4. Automated Build Pipeline
+✔ Operational drought forecasting pipeline
+✔ End-to-end reproducible data → model → inference system
+✔ Robust multi-model ensemble
+✔ Feature-engineering automation
+✔ Cloud-native, zero-maintenance deployment
+✔ User-friendly Gradio interface
+✔ Fast inference with native boosters
+✔ Scalable, transparent model architecture
 
-Hugging Face handles:
-
-Environment creation
-
-Dependency installation
-
-App serving
-
-Model caching
-
-⚠️ Limitations
-
-While AgriDrought-AI is operational and validated, current limitations include:
-
-1. Trained only on U.S. geographic regions
-
-FIPS codes are U.S.-specific
-
-Predictions outside USA are unsupported
-
-2. NDVI/EVI anomalies
-
-Extreme vegetation anomalies (wildfires, snow cover, hurricanes) may skew results
-
-3. Not a hydrological drought model
-
-Predicts vegetation + agricultural drought
-
-Does not model groundwater, reservoir levels, or precipitation
-
-4. Not a full ensemble stacker
-
-Stacking meta-model removed for deployment safety
-
-Only base models are used in final inference
-
-5. Limited temporal extrapolation
-
-Designed for in-distribution week ranges
-
-📦 Installation & Local Usage
-1. Clone repo
-git clone https://github.com/antra04/AgriDrought-AI
-cd AgriDrought-AI
-
-2. Install dependencies
-pip install -r requirements.txt
-
-3. Run locally
-python app.py
-
-
-App opens at:
-👉 http://127.0.0.1:7860
-
-🛠️ Tech Stack
-
-Python 3.10
-
-Gradio 4.44
-
-XGBoost
-
-CatBoost
-
-scikit-learn
-
-Pandas / NumPy
-
-Matplotlib
-
-Hugging Face Hub + Spaces
-
-GitHub version control
-
-🎉 Final Delivery Summary
-
-AgriDrought-AI delivers:
-
-A fully-automated drought prediction engine
-
-Clean deployment architecture
-
-Reproducible workflow
-
-Rich UI for non-technical users
-
-Fast inference via XGBoost native booster
-
-Scalable & transparent ML pipeline
-
-Easy distribution via HF Spac
