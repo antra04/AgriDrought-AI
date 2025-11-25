@@ -4,7 +4,7 @@
 
 **Developer:** *Antra Tiwari (AI/ML Engineer)*
 **Live App:** [https://huggingface.co/spaces/antra04/AgriDrought-AI](https://huggingface.co/spaces/antra04/AgriDrought-AI)
-**GitHub Repo:** [https://github.com/antra04/AgriDrought-AI](https://github.com/antra04/AgriDrought-AI)
+
 
 ---
 
