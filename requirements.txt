@@ -1,8 +1,0 @@
-tensorflow
-pandas
-numpy
-streamlit
-plotly
-folium
-requests
-earthengine-api
